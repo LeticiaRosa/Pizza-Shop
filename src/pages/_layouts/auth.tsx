@@ -1,16 +1,25 @@
 import { Pizza } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
+import pizzaBackground from '../../public/background.jpg' // Ajuste o caminho conforme a localização real da imagem
+
 export function AuthLayout() {
   return (
-    <div className="grid min-h-screen grid-cols-2">
-      <div className="flex h-full flex-col justify-between border-r border-foreground/5 bg-muted p-10 text-muted-foreground">
-        <div className="flex items-center gap-3 text-lg text-foreground">
+    <div className="grid min-h-screen grid-cols-2 antialiased">
+      <div
+        style={{
+          backgroundImage: `url(${pizzaBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+        className="flex h-full flex-col justify-between border-r border-foreground/5 bg-muted p-10 text-muted-foreground"
+      >
+        <div className="flex items-center gap-3 text-lg text-primary">
           <Pizza className="h-5 w-5" />
           <span className="font-semibold">pizza.shop</span>
         </div>
 
-        <footer className="text-sm">
+        <footer className="text-sm text-muted-foreground">
           Painel do parceiro &copy; pizza.shop - {new Date().getFullYear()}
         </footer>
       </div>
