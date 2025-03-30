@@ -1,9 +1,29 @@
 import { Helmet } from 'react-helmet-async'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+
+const signInForm = z.object({
+  email: z.string().email('E-mail inválido'),
+})
+
+type SignInForm = z.infer<typeof signInForm>
+
 export function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<SignInForm>()
+
+  async function handleSignIn(data: any) {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    console.log(data)
+  }
+
   return (
     <>
       <Helmet title="Login" />
@@ -20,9 +40,14 @@ export function SignIn() {
           <form className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Seu e-mail</Label>
-              <Input id="email" type="email" />
+              <Input id="email" type="email" {...register('email')} />
             </div>
-            <Button className="w-full" type="submit">
+            <Button
+              disabled={isSubmitting}
+              className="w-full"
+              type="submit"
+              onSubmit={handleSubmit(handleSignIn)}
+            >
               Acessar painel
             </Button>
           </form>
