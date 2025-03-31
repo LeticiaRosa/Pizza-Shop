@@ -18,6 +18,7 @@ export function Orders() {
             className="h-8 w-[320px]"
           />
         </form>
+        <div className="border rounded-md"></div>
       </div>
     </>
   )
