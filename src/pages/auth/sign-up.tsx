@@ -111,7 +111,7 @@ export function SignUp() {
               Finalizar cadastro
             </Button>
             <p className="px-6 text-center text-sm leading-relaxed text-muted-foreground">
-              Ao clicar em "Finalizar cadastro", você concorda com os{' '}
+              Ao clicar em Finalizar cadastro, você concorda com os{' '}
               <Link
                 to="/terms"
                 className="text-primary underline underline-offset-4"
