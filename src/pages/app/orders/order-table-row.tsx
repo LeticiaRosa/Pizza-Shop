@@ -1,8 +1,8 @@
 import { Search, ThumbsUp, X } from 'lucide-react'
 
-import { Button } from '../../components/ui/button'
-import { Dialog, DialogTrigger } from '../../components/ui/dialog'
-import { TableCell, TableRow } from '../../components/ui/table'
+import { Button } from '../../../components/ui/button'
+import { Dialog, DialogTrigger } from '../../../components/ui/dialog'
+import { TableCell, TableRow } from '../../../components/ui/table'
 import { OrderDetails } from './order-details'
 
 export interface OrderTableRowProps {
