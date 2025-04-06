@@ -1,13 +1,13 @@
 import { Helmet } from 'react-helmet-async'
 
-import { Pagination } from '../../components/pagination'
+import { Pagination } from '../../../components/pagination'
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from '../../components/ui/table'
+} from '../../../components/ui/table'
 import { OrderTableFilter } from './order-table-filter'
 import { OrderTableRow } from './order-table-row'
 
