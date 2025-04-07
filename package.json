@@ -30,6 +30,7 @@
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.53.1",
     "react-router-dom": "^6.27.0",
+    "recharts": "^2.15.2",
     "separator": "^0.1.0",
     "shadcn-ui": "^0.9.5",
     "sonner": "^1.2.0",
