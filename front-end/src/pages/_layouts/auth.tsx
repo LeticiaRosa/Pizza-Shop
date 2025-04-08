@@ -1,6 +1,6 @@
-import { Pizza } from 'lucide-react'
 import { Outlet } from 'react-router-dom'
 
+import { Logo } from '../../components/logo'
 import pizzaBackground from '../../public/background.jpg' // Ajuste o caminho conforme a localização real da imagem
 
 export function AuthLayout() {
@@ -15,8 +15,7 @@ export function AuthLayout() {
         className="flex h-full flex-col justify-between p-10"
       >
         <div className="flex items-center gap-3 text-lg text-primary">
-          <Pizza className="h-5 w-5" />
-          <span className="font-semibold">pizza.shop</span>
+          <Logo className="h-8" size={12} />
         </div>
 
         <footer className="text-sm text-muted-foreground">

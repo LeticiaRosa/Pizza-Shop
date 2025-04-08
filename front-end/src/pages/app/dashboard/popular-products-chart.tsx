@@ -1,29 +1,14 @@
 import { BarChart } from 'lucide-react'
-import { useState } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import colors from 'tailwindcss/colors'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../../components/ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const data = [
   { product: 'Peperoni', amount: 120 },
   { product: 'Mussarela', amount: 80 },
   { product: '4 Queijos', amount: 90 },
-  { product: 'Marguerita', amount: 40 },
+  { product: 'Marguerita', amount: 15 },
   { product: 'Frango com requeijão', amount: 23 },
 ]
 
@@ -55,8 +40,8 @@ export function PopularProductsChart() {
               dataKey="amount"
               cx="50%"
               cy="50%"
-              outerRadius={86}
-              innerRadius={64}
+              outerRadius={75}
+              innerRadius={55}
               strokeWidth={8}
               labelLine={false}
               label={({
