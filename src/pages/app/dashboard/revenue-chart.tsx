@@ -1,5 +1,12 @@
 import { useState } from 'react'
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import colors from 'tailwindcss/colors'
 
 import {
@@ -96,6 +103,7 @@ export function RevenueChart() {
               strokeWidth={2}
               dataKey="revenue"
             />
+            <CartesianGrid vertical={false} strokeDasharray="3 3" />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>
