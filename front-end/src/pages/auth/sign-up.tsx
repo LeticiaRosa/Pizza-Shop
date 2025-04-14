@@ -7,6 +7,8 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useMutation } from '@tanstack/react-query'
+import { registerRestaurant } from '../../api/register-restaurant'
 
 const signUpForm = z.object({
   restaurantName: z.string().min(1, 'Nome do restaurante é obrigatório'),
@@ -18,29 +20,41 @@ const signUpForm = z.object({
 
 type SignUpForm = z.infer<typeof signUpForm>
 
+
+
 export function SignUp() {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<SignUpForm>()
+
+  const { mutateAsync : registerRestaurantsMutate } = useMutation({
+    mutationFn: registerRestaurant,
+  })
+
   const navigate = useNavigate()
   async function handleSignUp(data: SignUpForm) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000)).then(() => {
-        console.log(data)
+      await 
+      registerRestaurantsMutate({
+        email: data.email,
+        restaurantName: data.restaurantName,
+        phone: data.restaurantPhone,
+        managerName: data.managerName,
+      })
         toast.success(
           'Cadastro realizado com sucesso! Verifique seu e-mail para ativar sua conta.',
           {
             action: {
               label: 'Login',
               onClick: () => {
-                navigate('/sign-in')
+                navigate('/sign-in?email=' + data.email)
               },
             },
           },
         )
-      })
+      
     } catch (error) {
       console.log(error)
       toast.error('Erro ao cadastrar restaurante')
