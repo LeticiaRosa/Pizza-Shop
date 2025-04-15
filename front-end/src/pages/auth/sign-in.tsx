@@ -18,19 +18,17 @@ const signInForm = z.object({
 type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
-  const [ searchParams ] = useSearchParams()
+  const [searchParams] = useSearchParams()
 
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<SignInForm>(
-    {
-      defaultValues: {
-        email: searchParams.get('email') ?? '',
-      },
-    }
-  )
+  } = useForm<SignInForm>({
+    defaultValues: {
+      email: searchParams.get('email') ?? '',
+    },
+  })
   const { mutateAsync: autenticate } = useMutation({
     mutationFn: signIn,
   })
