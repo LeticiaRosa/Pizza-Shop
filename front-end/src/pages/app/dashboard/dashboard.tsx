@@ -8,6 +8,7 @@ import { PopularProductsChart } from './popular-products-chart'
 import { RevenueChart } from './revenue-chart'
 
 export function Dashboard() {
+  console.log('Dashboard')
   return (
     <>
       <Helmet title="Dashboard" />
