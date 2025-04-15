@@ -35,12 +35,12 @@ const app = new Elysia()
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
       origin: (request): boolean => {
         const origin = request.headers.get('origin')
-
-        if (!origin) {
-          return false
+        console.log('Origin recebido:', origin)
+        if (origin === 'http://localhost:5173') {
+          return true
         }
 
-        return true
+        return false
       },
     }),
   )
@@ -87,7 +87,22 @@ const app = new Elysia()
     }
   })
 
-app.listen(3333)
+// Adicione antes do app.listen()
+app.get('/', () => {
+  const routes = app.routes.map((route) => {
+    return {
+      method: route.method,
+      path: route.path,
+    }
+  })
+
+  return { message: 'API is running', routes }
+})
+
+app.listen({
+  port: 3333,
+  hostname: '0.0.0.0',
+})
 
 console.log(
   `🔥 HTTP server running at ${app.server?.hostname}:${app.server?.port}`,
