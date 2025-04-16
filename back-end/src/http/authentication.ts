@@ -50,8 +50,8 @@ export const authentication = new Elysia()
           httpOnly: true,
           maxAge: 7 * 86400,
           path: '/',
-          secure: false,
-          sameSite: 'none',
+          // secure: false,
+          // sameSite: 'none',
         })
       },
       signOut: () => {

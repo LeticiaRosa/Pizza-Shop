@@ -35,11 +35,13 @@ const app = new Elysia()
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
       origin: (request): boolean => {
         const origin = request.headers.get('origin')
-        console.log('Origin recebido:', origin)
-        if (origin === 'http://localhost:5173') {
+        console.log(origin)
+        if (
+          origin === 'http://127.0.0.1:5173' ||
+          origin === 'http://localhost:5173'
+        ) {
           return true
         }
-
         return false
       },
     }),

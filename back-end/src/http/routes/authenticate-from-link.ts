@@ -20,7 +20,7 @@ export const authenticateFromLink = new Elysia().use(authentication).get(
     if (!authLinkFromCode) {
       throw new UnauthorizedError()
     }
-
+    console.log('codigo do usuario criado: ', authLinkFromCode.userId)
     if (dayjs().diff(authLinkFromCode.createdAt, 'days') > 7) {
       throw new UnauthorizedError()
     }
