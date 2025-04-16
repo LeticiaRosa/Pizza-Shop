@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
@@ -7,7 +8,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useMutation } from '@tanstack/react-query'
+
 import { registerRestaurant } from '../../api/register-restaurant'
 
 const signUpForm = z.object({
@@ -20,8 +21,6 @@ const signUpForm = z.object({
 
 type SignUpForm = z.infer<typeof signUpForm>
 
-
-
 export function SignUp() {
   const {
     register,
@@ -29,32 +28,30 @@ export function SignUp() {
     formState: { isSubmitting },
   } = useForm<SignUpForm>()
 
-  const { mutateAsync : registerRestaurantsMutate } = useMutation({
+  const { mutateAsync: registerRestaurantsMutate } = useMutation({
     mutationFn: registerRestaurant,
   })
 
   const navigate = useNavigate()
   async function handleSignUp(data: SignUpForm) {
     try {
-      await 
-      registerRestaurantsMutate({
+      await registerRestaurantsMutate({
         email: data.email,
         restaurantName: data.restaurantName,
         phone: data.restaurantPhone,
         managerName: data.managerName,
       })
-        toast.success(
-          'Cadastro realizado com sucesso! Verifique seu e-mail para ativar sua conta.',
-          {
-            action: {
-              label: 'Login',
-              onClick: () => {
-                navigate('/sign-in?email=' + data.email)
-              },
+      toast.success(
+        'Cadastro realizado com sucesso! Verifique seu e-mail para ativar sua conta.',
+        {
+          action: {
+            label: 'Login',
+            onClick: () => {
+              navigate('/sign-in?email=' + data.email)
             },
           },
-        )
-      
+        },
+      )
     } catch (error) {
       console.log(error)
       toast.error('Erro ao cadastrar restaurante')

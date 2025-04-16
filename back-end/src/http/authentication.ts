@@ -36,6 +36,7 @@ export const authentication = new Elysia()
   .derive(({ jwt, cookie, setCookie, removeCookie }) => {
     return {
       getCurrentUser: async () => {
+        console.log('Cookie recebido:', cookie)
         const payload = await jwt.verify(cookie.auth)
 
         if (!payload) {
@@ -49,6 +50,8 @@ export const authentication = new Elysia()
           httpOnly: true,
           maxAge: 7 * 86400,
           path: '/',
+          // secure: false,
+          // sameSite: 'none',
         })
       },
       signOut: () => {
@@ -56,7 +59,9 @@ export const authentication = new Elysia()
       },
     }
   })
-  .derive(({ getCurrentUser }) => {
+  .derive(({ getCurrentUser, cookie }) => {
+    console.log('Cookie recebido:', cookie)
+
     return {
       getManagedRestaurantId: async () => {
         const { restaurantId } = await getCurrentUser()

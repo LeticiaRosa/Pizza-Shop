@@ -12,20 +12,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { Skeleton } from './ui/skeleton'
 
 export function AccountMenu() {
-  const { data: profile } = useQuery({
+  const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryFn: getProfile,
     queryKey: ['get-profile'],
   })
-  const { data: managedRestaurant } = useQuery({
-    queryFn: getManagedRestaurant,
-    queryKey: ['get-managed-restaurant'],
-  })
-  console.log(profile)
+  const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
+    useQuery({
+      queryFn: getManagedRestaurant,
+      queryKey: ['get-managed-restaurant'],
+    })
 
-  const cookies = document.cookie
-  console.log('aqui', cookies)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,7 +32,11 @@ export function AccountMenu() {
           variant="outline"
           className="flex select-none items-center gap-2"
         >
-          {managedRestaurant?.name}
+          {isLoadingManagedRestaurant ? (
+            <Skeleton className="h-4 w-16" />
+          ) : (
+            managedRestaurant?.name
+          )}
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -42,7 +45,11 @@ export function AccountMenu() {
         <DropdownMenuLabel className="flex flex-col">
           <span>{profile?.name}</span>
           <span className="text-xs font-normal text-muted-foreground">
-            {profile?.email}
+            {isLoadingProfile ? (
+              <Skeleton className="h-4 w-16" />
+            ) : (
+              profile?.email
+            )}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

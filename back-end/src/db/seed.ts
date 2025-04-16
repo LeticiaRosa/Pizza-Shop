@@ -61,7 +61,7 @@ const [manager] = await db
   .returning()
 
 console.log(chalk.yellow('✔ Created manager'))
-
+console.log('criado usuario:', manager.id)
 /**
  * Create restaurant
  */

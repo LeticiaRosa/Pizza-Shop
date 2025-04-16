@@ -5,4 +5,4 @@ import * as schema from './schema'
 
 const client = postgres(env.DB_URL)
 
-export const db = drizzle(client, { schema })
+export const db = drizzle(client, { schema, logger: true })
