@@ -19,11 +19,11 @@ export function AccountMenu() {
     queryFn: getProfile,
     queryKey: ['get-profile'],
   })
-  // const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
-  //   useQuery({
-  //     queryFn: getManagedRestaurant,
-  //     queryKey: ['get-managed-restaurant'],
-  //   })
+  const { data: managedRestaurant, isLoading: isLoadingManagedRestaurant } =
+    useQuery({
+      queryFn: getManagedRestaurant,
+      queryKey: ['get-managed-restaurant'],
+    })
 
   return (
     <DropdownMenu>
@@ -32,11 +32,11 @@ export function AccountMenu() {
           variant="outline"
           className="flex select-none items-center gap-2"
         >
-          {/* {isLoadingManagedRestaurant ? (
+          {isLoadingManagedRestaurant ? (
             <Skeleton className="h-4 w-16" />
           ) : (
             managedRestaurant?.name
-          )} */}
+          )}
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
