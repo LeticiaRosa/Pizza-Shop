@@ -4,8 +4,12 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
-import { getManagedRestaurant } from '../api/get-managed-restaurants'
+import {
+  getManagedRestaurant,
+  GetManagedRestaurantResponse,
+} from '../api/get-managed-restaurants'
 import { updateProfile } from '../api/update-profile'
+import { queryClient } from '../lib/react-query'
 import { Button } from './ui/button'
 import {
   DialogClose,
@@ -21,7 +25,7 @@ import { Textarea } from './ui/textarea'
 
 const storeProfileSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
-  description: z.string().min(1, 'Descrição é obrigatória'),
+  description: z.string().min(1).nullable(),
 })
 
 type StoreProfileSchema = z.infer<typeof storeProfileSchema>
@@ -45,9 +49,43 @@ export function StoreProfileDialog() {
     },
   })
 
+  function updateManagedRestaurantCache({
+    name,
+    description,
+  }: StoreProfileSchema) {
+    // Mutação do Cache!
+    const cachedRestaurant =
+      queryClient.getQueryData<GetManagedRestaurantResponse>([
+        'get-managed-restaurant',
+      ])
+    if (cachedRestaurant) {
+      queryClient.setQueryData<GetManagedRestaurantResponse>(
+        ['get-managed-restaurant'],
+        {
+          ...cachedRestaurant,
+          name,
+          description,
+        },
+      )
+    }
+    return { cachedRestaurant }
+  }
+
   const { mutateAsync: updateProfileFn } = useMutation({
     mutationFn: updateProfile,
     mutationKey: ['update-profile'],
+    onMutate({ name, description }) {
+      const { cachedRestaurant } = updateManagedRestaurantCache({
+        name,
+        description,
+      })
+      return { previousProfile: cachedRestaurant }
+    },
+    onError(_, __, context) {
+      if (context?.previousProfile) {
+        updateManagedRestaurantCache(context.previousProfile)
+      }
+    },
   })
 
   async function handleSubmitProfile(data: StoreProfileSchema) {
