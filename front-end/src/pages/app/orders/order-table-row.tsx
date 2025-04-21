@@ -1,3 +1,5 @@
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { Search, ThumbsUp, X } from 'lucide-react'
 
 import { OrderStatus } from '../../../components/order-status'
@@ -5,7 +7,6 @@ import { Button } from '../../../components/ui/button'
 import { Dialog, DialogTrigger } from '../../../components/ui/dialog'
 import { TableCell, TableRow } from '../../../components/ui/table'
 import { OrderDetails } from './order-details'
-
 export interface OrderTableRowProps {
   order: {
     orderId: string
@@ -33,12 +34,23 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
       <TableCell className="font-mono text-xs font-medium">
         {order.orderId}
       </TableCell>
-      <TableCell className="text-muted-foreground">{order.createdAt}</TableCell>
+      <TableCell className="text-muted-foreground">
+        {formatDistanceToNow(order.createdAt, {
+          locale: ptBR,
+          addSuffix: true,
+        })}
+      </TableCell>
       <TableCell>
         <OrderStatus status={order.status} />
       </TableCell>
       <TableCell className="font-medium">{order.customerName}</TableCell>
-      <TableCell className="font-medium">{order.total}</TableCell>
+      <TableCell className="font-medium">
+        {order.total.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+          minimumFractionDigits: 2,
+        })}
+      </TableCell>
       <TableCell>
         <Button variant="outline" size="sm">
           <ThumbsUp className="mr-2 h-4 w-4" />
