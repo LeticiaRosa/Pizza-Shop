@@ -16,7 +16,7 @@ export interface GetOrdersResponse {
 }
 
 interface GetOrdersParams {
-  pageIndex: number
+  pageIndex: number | null
 }
 
 export async function getOrders({ pageIndex }: GetOrdersParams) {
