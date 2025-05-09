@@ -17,15 +17,20 @@ import { OrderTableRow } from './order-table-row'
 
 export function Orders() {
   const [searchParams, setSearchParams] = useSearchParams()
+
   const pageIndex = z.coerce
     .number()
     .transform((page) => page - 1)
-    .parse(searchParams.get('page'))
+    .parse(searchParams.get('page') ?? '1')
+
   const { data: result } = useQuery({
     queryFn: async () => getOrders({ pageIndex }),
-    queryKey: ['get-orders'],
+    queryKey: ['get-orders', pageIndex],
   })
 
+  function handlePaginate(pageIndex: number) {
+    setSearchParams({ page: String(pageIndex + 1) })
+  }
   return (
     <>
       <Helmet title="Pedidos" />
@@ -61,6 +66,7 @@ export function Orders() {
               pageIndex={result.meta.pageIndex}
               totalCount={result.meta.totalCount}
               perPage={result.meta.perPage}
+              onPageChange={handlePaginate}
             />
           )}
         </div>
