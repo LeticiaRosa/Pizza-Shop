@@ -1,10 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Search, ThumbsUp, X } from 'lucide-react'
+import { ArrowRight, Search, X } from 'lucide-react'
 import { useState } from 'react'
 
+import { approveOrder } from '../../../api/approve-order'
 import { cancelOrder } from '../../../api/cancel-order'
+import { deliverOrder } from '../../../api/deliver-order'
+import { dispatchOrder } from '../../../api/dispath-order'
 import { GetOrdersResponse } from '../../../api/get-orders'
 import { OrderStatus } from '../../../components/order-status'
 import { Button } from '../../../components/ui/button'
@@ -46,17 +49,42 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
     })
   }
 
-  const { mutateAsync: cancelOrderFn } = useMutation({
-    mutationFn: cancelOrder,
-    async onSuccess(_, { orderId }) {
-      updateOrderStatusOnCache(orderId, 'canceled')
-      setIsDetailsOpen(false)
-      queryClient.invalidateQueries({ queryKey: ['orders'] })
-    },
-    onError(error) {
-      console.error('Erro ao cancelar o pedido:', error, order.orderId)
-    },
-  })
+  const { mutateAsync: cancelOrderFn, isPending: isCancelingOrder } =
+    useMutation({
+      mutationFn: cancelOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'canceled')
+        // setIsDetailsOpen(false)
+        // queryClient.invalidateQueries({ queryKey: ['orders'] })
+      },
+      onError(error) {
+        console.error('Erro ao cancelar o pedido:', error, order.orderId)
+      },
+    })
+
+  const { mutateAsync: approveOrderFn, isPending: isApprovingOrder } =
+    useMutation({
+      mutationFn: approveOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'processing')
+      },
+    })
+
+  const { mutateAsync: dispatchOrderFn, isPending: isDispatchingOrder } =
+    useMutation({
+      mutationFn: dispatchOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'delivering')
+      },
+    })
+
+  const { mutateAsync: deliverOrderFn, isPending: isDeliveringOrder } =
+    useMutation({
+      mutationFn: deliverOrder,
+      async onSuccess(_, { orderId }) {
+        updateOrderStatusOnCache(orderId, 'delivered')
+      },
+    })
 
   return (
     <TableRow key={order.orderId}>
@@ -92,17 +120,50 @@ export function OrderTableRow({ order }: OrderTableRowProps) {
         })}
       </TableCell>
       <TableCell>
-        <Button variant="outline" size="sm">
-          <ThumbsUp className="mr-2 h-4 w-4" />
-          Aprovar
-        </Button>
+        {order.status === 'pending' && (
+          <Button
+            variant="outline"
+            disabled={isApprovingOrder}
+            size="xs"
+            onClick={() => approveOrderFn({ orderId: order.orderId })}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Aprovar
+          </Button>
+        )}
+        {order.status === 'processing' && (
+          <Button
+            variant="outline"
+            disabled={isDispatchingOrder}
+            size="xs"
+            onClick={() => dispatchOrderFn({ orderId: order.orderId })}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Em entrega
+          </Button>
+        )}
+
+        {order.status === 'delivering' && (
+          <Button
+            variant="outline"
+            disabled={isDeliveringOrder}
+            size="xs"
+            onClick={() => deliverOrderFn({ orderId: order.orderId })}
+          >
+            <ArrowRight className="mr-2 h-3 w-3" />
+            Entregue
+          </Button>
+        )}
       </TableCell>
       <TableCell>
         <Button
-          variant="link"
-          size="sm"
-          disabled={!['pending', 'processing'].includes(order.status)}
+          disabled={
+            !['pending', 'processing'].includes(order.status) ||
+            isCancelingOrder
+          }
           onClick={() => cancelOrderFn({ orderId: order.orderId })}
+          variant="ghost"
+          size="xs"
         >
           <X className="mr-2 h-4 w-4" />
           Cancelar

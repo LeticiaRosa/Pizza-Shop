@@ -41,10 +41,17 @@ export function OrderStatus({ status }: OrderStatusProps) {
         />
       )}
 
-      {['processing', 'delivering'].includes(status) && (
+      {status === 'processing' && (
         <span
           data-testid="badge"
           className="h-2 w-2 rounded-full bg-amber-500"
+        />
+      )}
+
+      {status === 'delivering' && (
+        <span
+          data-testid="badge"
+          className="h-2 w-2 rounded-full bg-orange-500"
         />
       )}
 
