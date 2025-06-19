@@ -3,43 +3,61 @@ import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
-import { getOrders } from '../../../api/get-orders'
-import { Pagination } from '../../../components/pagination'
+import { getOrders } from '@/api/get-orders'
+import { Pagination } from '@/components/pagination'
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from '../../../components/ui/table'
+} from '@/components/ui/table'
+
 import { OrderTableFilter } from './order-table-filter'
 import { OrderTableRow } from './order-table-row'
+import { OrderTableSkeleton } from './order-table-skeleton'
 
 export function Orders() {
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const orderId = searchParams.get('orderId')
+  const customerName = searchParams.get('customerName')
+  const status = searchParams.get('status')
 
   const pageIndex = z.coerce
     .number()
     .transform((page) => page - 1)
     .parse(searchParams.get('page') ?? '1')
 
-  const { data: result } = useQuery({
-    queryFn: async () => getOrders({ pageIndex }),
-    queryKey: ['get-orders', pageIndex],
+  const { data: result, isLoading: isLoadingOrders } = useQuery({
+    queryKey: ['orders', pageIndex, orderId, customerName, status],
+    queryFn: () =>
+      getOrders({
+        pageIndex,
+        orderId,
+        customerName,
+        status: status === 'all' ? null : status,
+      }),
   })
 
   function handlePaginate(pageIndex: number) {
-    setSearchParams({ page: String(pageIndex + 1) })
+    setSearchParams((state) => {
+      state.set('page', (pageIndex + 1).toString())
+
+      return state
+    })
   }
+
   return (
     <>
       <Helmet title="Pedidos" />
+
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Pedidos</h1>
-
         <div className="space-y-2.5">
           <OrderTableFilter />
-          <div className="border rounded-md">
+
+          <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -61,12 +79,14 @@ export function Orders() {
               </TableBody>
             </Table>
           </div>
+          {isLoadingOrders && <OrderTableSkeleton />}
+
           {result && (
             <Pagination
+              onPageChange={handlePaginate}
               pageIndex={result.meta.pageIndex}
               totalCount={result.meta.totalCount}
               perPage={result.meta.perPage}
-              onPageChange={handlePaginate}
             />
           )}
         </div>
