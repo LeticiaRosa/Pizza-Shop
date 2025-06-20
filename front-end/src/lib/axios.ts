@@ -20,7 +20,6 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
-      // Redirecionar para a página de login
       window.location.href = '/sign-in'
     }
     return Promise.reject(error)
